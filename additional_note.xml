@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" version="3" group="jshoppingcheckout" method="upgrade">
+
+	<name>JoomShopping Plugin дополнительного комментария в корзине</name>
+	<author>exstreme</author>
+	<creationDate>2018</creationDate>
+	<copyright>Copyright © ProtectYourSite</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>info@protectyoursite.ru</authorEmail>
+	<authorUrl>https://protectyoursite.ru</authorUrl>
+	<version>1.0.0</version>
+	<description>Добавляет поле примечания для товаров в корзине</description>
+
+	<files>
+		<filename plugin="additional_note">additional_note.php</filename>
+	</files>
+	
+</extension>
