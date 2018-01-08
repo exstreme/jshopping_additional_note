@@ -1,6 +1,6 @@
 <?php
 /**
- * @package plg_jshoppingcart_additional_note
+ * @package plg_jshoppingcheckout_additional_note
  * @author exstreme <info@protectyoursite.ru>
  * @copyright Copyright © ProtectYourSite
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
@@ -19,7 +19,7 @@ class plgJshoppingCheckoutAdditional_note extends JPlugin
     }
 	
 	// Добавляем ключ в корзину
-	public function onBeforeSaveNewProductToCart(&$cart, &$temp_product, &$product){ 
+	public function onBeforeSaveNewProductToCart(&$cart, &$temp_product, &$product){
         $temp_product['additional_note'] = '';    
     }
 		
@@ -43,17 +43,25 @@ class plgJshoppingCheckoutAdditional_note extends JPlugin
     {
         foreach($view->products as $k=>$v){
             $view->products[$k]['_ext_attribute_html'].= "<div class='additional_note_div'>
-			<div class='note_label'>Комментарий к товару:</div>
-			<div class='note_input'>".$v['additional_note']."</div>
-			</div>";
+			<div class='note_label'>Комментарий к товару:</div>";
+            if (isset($v['additional_note']) && $v['additional_note'] !='')
+            {
+	            $view->products[$k]['_ext_attribute_html'] .= "<div class='note_input'>" . $v['additional_note'] . "</div>";
+            }
+	        $view->products[$k]['_ext_attribute_html'].= "</div>";
         }
     }
 	
 	// Сохраняем введенные комментарии в сессии 
 	function onBeforeRefreshProductInCart(&$quantity, &$cart){
+    	if(JRequest::getVar('note_id',int) != ''){
 		$id = JRequest::getVar('note_id',int);
-		$comment = JRequest::getVar('additional_note'.$id);
-		$cart->products[$id]['additional_note'] = htmlspecialchars($comment);
+			if(JRequest::getVar('additional_note'.$id) != '') // Только если изменили поле комментария!
+			{
+				$comment                                = JRequest::getVar('additional_note' . $id);
+				$cart->products[$id]['additional_note'] = htmlspecialchars($comment);
+			}
+    	}
     }
 	
 	// После создания заказа помещаем комментарии в массив $add_note_tmp для отправки в шаблоне заказа
@@ -61,8 +69,6 @@ class plgJshoppingCheckoutAdditional_note extends JPlugin
 		foreach($cart->products as $product){
 			$this->$add_note_tmp[]=$product['additional_note'];
 		}
-		return $add_note_tmp;
-
 	}
 
 	// Передаем функции отправки данные комментариев	
